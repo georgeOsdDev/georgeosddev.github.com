@@ -72,12 +72,6 @@ execGlobalCommand = (command,callback) ->
     log stdout + stderr
     callback?.apply()
 
-copyJson = (callback) ->
-  exec "echo 'json = ' > ./json/data.js && cat ./json/data.json >> ./json/data.js", (err, stdout, stderr)->
-    throw err if err
-    log stdout + stderr
-    callback?.apply()
-
 clean = ->
   exec 'rm -rf ./javascripts/*.js', (err, stdout, stderr)->
     throw err if err
