@@ -21,9 +21,11 @@ Coffeelint =
 Uglifyjs =
   cmd: "uglifyjs"
   options: [
+    "-c"                                #compress
+    "-m"                                #mangle
     "--verbose"                         #verbose
-    "--overwrite"                       #overwrite
     "./javascripts/app.js"              #src
+    "-o ./javascripts/app.min.js"       #dist
   ]
 
 Stylus =
@@ -44,6 +46,9 @@ task 'coffee', (options) ->
 task 'uglify', (options) ->
   execGlobalCommand(Uglifyjs)
 
+task 'stylus', (options) ->
+  execGlobalCommand(Stylus)
+
 task 'lint', (options) ->
   execGlobalCommand(Coffeelint)
 
@@ -60,11 +65,10 @@ task 'preview',(options) ->
     log stdout + stderr
 
 compile = ->
-    execGlobalCommand Coffeelint
-    execGlobalCommand Coffee, ->
-      copyJson ->
-        execGlobalCommand Uglifyjs
-    execGlobalCommand Stylus
+    execGlobalCommand Coffeelint,->
+      execGlobalCommand Coffee,->
+        execGlobalCommand Uglifyjs,->
+          execGlobalCommand Stylus
 
 execGlobalCommand = (command,callback) ->
   exec "#{command.cmd} #{command.options.join(' ')}", (err, stdout, stderr)->
